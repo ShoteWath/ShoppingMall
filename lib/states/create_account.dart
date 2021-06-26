@@ -10,6 +10,8 @@ class CreateAccount extends StatefulWidget {
 }
 
 class _CreateAccountState extends State<CreateAccount> {
+  String? typeUser;
+
   Row buildName(double size) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -54,8 +56,83 @@ class _CreateAccountState extends State<CreateAccount> {
           buildTitle('ข้อมูลทั่วไป :'),
           buildName(size),
           buildTitle('ชนิดของ User :'),
+          buildRadioBuyer(size),
+          buildRadioSeller(size),
+          buildRadioRider(size),
         ],
       ),
+    );
+  }
+
+  Row buildRadioBuyer(double size) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: size * 0.6,
+          child: RadioListTile(
+            value: ' buyer',
+            groupValue: typeUser,
+            onChanged: (value) {
+              setState(() {
+                typeUser = value as String;
+              });
+            },
+            title: ShowTitle(
+              title: 'ผู้ซื้อ (Buyer)',
+              textStyle: MyConstant().h3Style(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row buildRadioSeller(double size) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: size * 0.6,
+          child: RadioListTile(
+            value: 'seller',
+            groupValue: typeUser,
+            onChanged: (value) {
+              setState(() {
+                typeUser = value as String;
+              });
+            },
+            title: ShowTitle(
+              title: 'ผู้ขาย (Seller)',
+              textStyle: MyConstant().h3Style(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row buildRadioRider(double size) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: size * 0.6,
+          child: RadioListTile(
+            value: 'rider',
+            groupValue: typeUser,
+            onChanged: (value) {
+              setState(() {
+                typeUser = value as String?;
+              });
+            },
+            title: ShowTitle(
+              title: 'ผู้ส่ง (Rider)',
+              textStyle: MyConstant().h3Style(),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
