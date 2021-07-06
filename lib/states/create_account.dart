@@ -21,7 +21,7 @@ class _CreateAccountState extends State<CreateAccount> {
   String? typeUser;
   File? file;
   double? lat, lng;
-
+  final formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
@@ -91,6 +91,11 @@ class _CreateAccountState extends State<CreateAccount> {
           margin: EdgeInsets.only(top: 16),
           width: size * 0.6,
           child: TextFormField(
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอก Name ด้วยค่ะ';
+              } else {}
+            },
             decoration: InputDecoration(
               labelStyle: MyConstant().h3Style(),
               labelText: 'Name :',
@@ -121,6 +126,11 @@ class _CreateAccountState extends State<CreateAccount> {
           margin: EdgeInsets.only(top: 16),
           width: size * 0.6,
           child: TextFormField(
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอก Phone ด้วยค่ะ';
+              } else {}
+            },
             decoration: InputDecoration(
               labelStyle: MyConstant().h3Style(),
               labelText: 'Phone :',
@@ -151,6 +161,11 @@ class _CreateAccountState extends State<CreateAccount> {
           margin: EdgeInsets.only(top: 16),
           width: size * 0.6,
           child: TextFormField(
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอก User ด้วยค่ะ';
+              } else {}
+            },
             decoration: InputDecoration(
               labelStyle: MyConstant().h3Style(),
               labelText: 'User :',
@@ -181,6 +196,11 @@ class _CreateAccountState extends State<CreateAccount> {
           margin: EdgeInsets.only(top: 16),
           width: size * 0.6,
           child: TextFormField(
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอก Password ด้วยค่ะ';
+              } else {}
+            },
             decoration: InputDecoration(
               labelStyle: MyConstant().h3Style(),
               labelText: 'Password :',
@@ -211,6 +231,11 @@ class _CreateAccountState extends State<CreateAccount> {
           margin: EdgeInsets.only(top: 16),
           width: size * 0.6,
           child: TextFormField(
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'กรุณากรอก Address ด้วยค่ะ';
+              } else {}
+            },
             maxLines: 4,
             decoration: InputDecoration(
               hintText: 'Address :',
@@ -242,32 +267,43 @@ class _CreateAccountState extends State<CreateAccount> {
     double size = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () {
+              if (formKey.currentState!.validate()) {}
+            },
+            icon: Icon(Icons.cloud_upload),
+          ),
+        ],
         title: Text('Create New Account'),
         backgroundColor: MyConstant.primary,
       ),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         behavior: HitTestBehavior.opaque,
-        child: ListView(
-          padding: EdgeInsets.all(16),
-          children: [
-            buildTitle('ข้อมูลทั่วไป :'),
-            buildName(size),
-            buildTitle('ชนิดของ User :'),
-            buildRadioBuyer(size),
-            buildRadioSeller(size),
-            buildRadioRider(size),
-            buildTitle('ข้อมูลพื้นฐาน'),
-            buildAddress(size),
-            buildPhone(size),
-            buildUser(size),
-            buildPassword(size),
-            buildTitle('รูปภาพ'),
-            buildSubTitle(),
-            buildAvatar(size),
-            buildTitle('แสดงพิกัด ที่คุณอยู่'),
-            buildMap(),
-          ],
+        child: Form(
+          key: formKey,
+          child: ListView(
+            padding: EdgeInsets.all(16),
+            children: [
+              buildTitle('ข้อมูลทั่วไป :'),
+              buildName(size),
+              buildTitle('ชนิดของ User :'),
+              buildRadioBuyer(size),
+              buildRadioSeller(size),
+              buildRadioRider(size),
+              buildTitle('ข้อมูลพื้นฐาน'),
+              buildAddress(size),
+              buildPhone(size),
+              buildUser(size),
+              buildPassword(size),
+              buildTitle('รูปภาพ'),
+              buildSubTitle(),
+              buildAvatar(size),
+              buildTitle('แสดงพิกัด ที่คุณอยู่'),
+              buildMap(),
+            ],
+          ),
         ),
       ),
     );
