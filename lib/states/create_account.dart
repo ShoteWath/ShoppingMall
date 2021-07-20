@@ -495,11 +495,11 @@ class _CreateAccountState extends State<CreateAccount> {
         Container(
           width: size * 0.6,
           child: RadioListTile(
-            value: ' buyer',
+            value: 'buyer',
             groupValue: typeUser,
             onChanged: (value) {
               setState(() {
-                typeUser = value as String;
+                typeUser = value as String?;
               });
             },
             title: ShowTitle(
@@ -523,7 +523,7 @@ class _CreateAccountState extends State<CreateAccount> {
             groupValue: typeUser,
             onChanged: (value) {
               setState(() {
-                typeUser = value as String;
+                typeUser = value as String?;
               });
             },
             title: ShowTitle(
