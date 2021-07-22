@@ -11,7 +11,7 @@ class _ShowOrderSellerState extends State<ShowOrderSeller> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text('Show Order'),
+      body: Text('This is Show Order'),
     );
   }
 }

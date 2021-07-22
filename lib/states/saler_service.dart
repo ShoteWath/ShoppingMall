@@ -16,8 +16,8 @@ class SalerService extends StatefulWidget {
 class _SalerServiceState extends State<SalerService> {
   List<Widget> widgets = [
     ShowOrderSeller(),
-    ShowProductSeller(),
     ShopManageSeller(),
+    ShowProductSeller(),
   ];
   int indexWidget = 0;
 

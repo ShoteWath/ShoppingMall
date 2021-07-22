@@ -11,7 +11,7 @@ class _ShopManageSellerState extends State<ShopManageSeller> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text('This is Shop Manage'),
+      body: Text('This is Show Manage'),
     );
   }
 }
