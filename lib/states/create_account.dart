@@ -437,6 +437,7 @@ class _CreateAccountState extends State<CreateAccount> {
 
   Future<Null> chooseImage(ImageSource source) async {
     try {
+      // ignore: deprecated_member_use
       var result = await ImagePicker().getImage(
         source: source,
         maxWidth: 800,
@@ -499,7 +500,7 @@ class _CreateAccountState extends State<CreateAccount> {
             groupValue: typeUser,
             onChanged: (value) {
               setState(() {
-                typeUser = value as String?;
+                typeUser = value as String;
               });
             },
             title: ShowTitle(
