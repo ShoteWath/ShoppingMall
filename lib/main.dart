@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shoppingmall/states/add_product.dart';
 import 'package:shoppingmall/states/authen.dart';
 import 'package:shoppingmall/states/buyer_service.dart';
 import 'package:shoppingmall/states/create_account.dart';
@@ -12,6 +13,7 @@ final Map<String, WidgetBuilder> map = {
   '/buyerService': (BuildContext context) => BuyerService(),
   '/riderService': (BuildContext context) => RiderService(),
   '/salerService': (BuildContext context) => SalerService(),
+  '/addProduct': (BuildContext context) => AddProduct(),
 };
 
 String? initlalRoute;
