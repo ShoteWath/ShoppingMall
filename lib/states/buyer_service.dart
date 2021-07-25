@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shoppingmall/utility/my_constant.dart';
 import 'package:shoppingmall/widgets/show_signout.dart';
 
 class BuyerService extends StatefulWidget {

@@ -20,12 +20,23 @@ class _AddProductState extends State<AddProduct> {
           onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
           behavior: HitTestBehavior.opaque,
           child: Center(
-            child: Column(
-              children: [
-                buildProductName(constraints),
-                buildProductPrice(constraints),
-                buildProductDetail(constraints),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  buildProductName(constraints),
+                  buildProductPrice(constraints),
+                  buildProductDetail(constraints),
+                  buildImage(constraints),
+                  Container(
+                    width: constraints.maxWidth * 0.75,
+                    child: ElevatedButton(
+                      style: MyConstant().myButtonStyle(),
+                      onPressed: () {},
+                      child: Text('Add Product'),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -33,9 +44,49 @@ class _AddProductState extends State<AddProduct> {
     );
   }
 
+  Column buildImage(BoxConstraints constraints) {
+    return Column(
+      children: [
+        Container(
+          width: constraints.maxWidth * 0.75,
+          height: constraints.maxWidth * 0.75,
+          child: Image.asset(MyConstant.image5),
+        ),
+        Container(
+          width: constraints.maxWidth * 0.75,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                child: Image.asset(MyConstant.image5),
+              ),
+              Container(
+                width: 48,
+                height: 48,
+                child: Image.asset(MyConstant.image5),
+              ),
+              Container(
+                width: 48,
+                height: 48,
+                child: Image.asset(MyConstant.image5),
+              ),
+              Container(
+                width: 48,
+                height: 48,
+                child: Image.asset(MyConstant.image5),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget buildProductName(BoxConstraints constraints) {
     return Container(
-      width: constraints.maxHeight * 0.5,
+      width: constraints.maxWidth * 0.75,
       margin: EdgeInsets.only(top: 16),
       child: TextFormField(
         decoration: InputDecoration(
@@ -60,7 +111,7 @@ class _AddProductState extends State<AddProduct> {
 
   Widget buildProductPrice(BoxConstraints constraints) {
     return Container(
-      width: constraints.maxHeight * 0.5,
+      width: constraints.maxWidth * 0.75,
       margin: EdgeInsets.only(top: 16),
       child: TextFormField(
         keyboardType: TextInputType.number,
@@ -86,7 +137,7 @@ class _AddProductState extends State<AddProduct> {
 
   Widget buildProductDetail(BoxConstraints constraints) {
     return Container(
-      width: constraints.maxHeight * 0.5,
+      width: constraints.maxWidth * 0.75,
       margin: EdgeInsets.only(top: 16),
       child: TextFormField(
         maxLines: 4,
