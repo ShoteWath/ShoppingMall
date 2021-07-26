@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
+import 'package:shoppingmall/widgets/show_image.dart';
+import 'package:shoppingmall/widgets/show_title.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({Key? key}) : super(key: key);
@@ -55,6 +57,41 @@ class _AddProductState extends State<AddProduct> {
     );
   }
 
+  Future<Null> chooseSourceImageDialog(int index) async {
+    print('Click From ==>>$index');
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: ListTile(
+          leading: ShowImage(path: MyConstant.image4),
+          title: ShowTitle(
+            title: 'Sourse Image ${index + 1} ?',
+            textStyle: MyConstant().h2Style(),
+          ),
+          subtitle: ShowTitle(
+            title: 'Please Tap on Camera or Gallery',
+            textStyle: MyConstant().h3Style(),
+          ),
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Camera'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Gallery'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Column buildImage(BoxConstraints constraints) {
     return Column(
       children: [
@@ -71,22 +108,34 @@ class _AddProductState extends State<AddProduct> {
               Container(
                 width: 48,
                 height: 48,
-                child: Image.asset(MyConstant.image5),
+                child: InkWell(
+                  onTap: () => chooseSourceImageDialog(0),
+                  child: Image.asset(MyConstant.image5),
+                ),
               ),
               Container(
                 width: 48,
                 height: 48,
-                child: Image.asset(MyConstant.image5),
+                child: InkWell(
+                  onTap: () => chooseSourceImageDialog(1),
+                  child: Image.asset(MyConstant.image5),
+                ),
               ),
               Container(
                 width: 48,
                 height: 48,
-                child: Image.asset(MyConstant.image5),
+                child: InkWell(
+                  onTap: () => chooseSourceImageDialog(2),
+                  child: Image.asset(MyConstant.image5),
+                ),
               ),
               Container(
                 width: 48,
                 height: 48,
-                child: Image.asset(MyConstant.image5),
+                child: InkWell(
+                  onTap: () => chooseSourceImageDialog(3),
+                  child: Image.asset(MyConstant.image5),
+                ),
               ),
             ],
           ),
