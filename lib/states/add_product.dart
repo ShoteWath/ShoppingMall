@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
@@ -21,6 +22,7 @@ class _AddProductState extends State<AddProduct> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    initialFile();
   }
 
   void initialFile() {
@@ -80,10 +82,9 @@ class _AddProductState extends State<AddProduct> {
         maxWidth: 800,
         maxHeight: 800,
       );
-      // files[index] = File(result!.path);
       setState(() {
         file = File(result!.path);
-        // files[index] = file;
+        files[index] = file;
       });
     } catch (e) {}
   }
@@ -148,7 +149,12 @@ class _AddProductState extends State<AddProduct> {
                 height: 48,
                 child: InkWell(
                   onTap: () => chooseSourceImageDialog(0),
-                  child: Image.asset(MyConstant.image5),
+                  child: files[0] == null
+                      ? Image.asset(MyConstant.image5)
+                      : Image.file(
+                          files[0]!,
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
               Container(
@@ -156,7 +162,12 @@ class _AddProductState extends State<AddProduct> {
                 height: 48,
                 child: InkWell(
                   onTap: () => chooseSourceImageDialog(1),
-                  child: Image.asset(MyConstant.image5),
+                  child: files[1] == null
+                      ? Image.asset(MyConstant.image5)
+                      : Image.file(
+                          files[1]!,
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
               Container(
@@ -164,7 +175,12 @@ class _AddProductState extends State<AddProduct> {
                 height: 48,
                 child: InkWell(
                   onTap: () => chooseSourceImageDialog(2),
-                  child: Image.asset(MyConstant.image5),
+                  child: files[2] == null
+                      ? Image.asset(MyConstant.image5)
+                      : Image.file(
+                          files[2]!,
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
               Container(
@@ -172,7 +188,12 @@ class _AddProductState extends State<AddProduct> {
                 height: 48,
                 child: InkWell(
                   onTap: () => chooseSourceImageDialog(3),
-                  child: Image.asset(MyConstant.image5),
+                  child: files[3] == null
+                      ? Image.asset(MyConstant.image5)
+                      : Image.file(
+                          files[3]!,
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
             ],
