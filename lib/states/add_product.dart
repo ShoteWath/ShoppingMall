@@ -23,6 +23,7 @@ class _AddProductState extends State<AddProduct> {
   TextEditingController nameControler = TextEditingController();
   TextEditingController priceControler = TextEditingController();
   TextEditingController detailControler = TextEditingController();
+  List<String> paths = [];
 
   @override
   void initState() {
@@ -96,18 +97,19 @@ class _AddProductState extends State<AddProduct> {
         }
       }
       if (checkFile) {
-        // print('## choose 4 image success');
-
         MyDialog().showProgressDialog(context);
 
         String apiSaveProduct =
             '${MyConstant.domain}/shoppingmall/saveProduct.php';
-        // print('### apiProduct == $apiSaveProduct');
+
         int loop = 0;
 
         for (var item in files) {
           int i = Random().nextInt(1000000);
           String nameFile = 'product$i.jpg';
+
+          paths.add('/product/$nameFile');
+
           Map<String, dynamic> map = {};
           map['file'] =
               await MultipartFile.fromFile(item!.path, filename: nameFile);
@@ -123,8 +125,16 @@ class _AddProductState extends State<AddProduct> {
               String name = nameControler.text;
               String price = priceControler.text;
               String detail = detailControler.text;
+              String images = paths.toString();
+
               print('### idSeller = $idSeller,nameSeller = $nameSeller');
               print('### name = $name,price = $price,detail = $detail');
+              print('### images ==>$images');
+
+              String path =
+                  '${MyConstant.domain}/shoppingmall/insertProduct.php?isAdd=true&idSeller=$idSeller&nameSeller=$nameSeller&name=$name&price=$price&detail=$detail&images=$images';
+
+              await Dio().get(path).then((value) => Navigator.pop(context));
 
               Navigator.pop(context);
             }

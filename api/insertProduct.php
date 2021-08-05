@@ -19,7 +19,7 @@ if (isset($_GET)) {
 	if ($_GET['isAdd'] == 'true') {
 				
 		$idSeller = $_GET['idSeller'];
-		$nameSeller = $_GET['idnameSeller'];
+		$nameSeller = $_GET['nameSeller'];
 		$name = $_GET['name'];
 		$price = $_GET['price'];
 		$detail = $_GET['detail'];
