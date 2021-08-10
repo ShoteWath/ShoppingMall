@@ -18,6 +18,7 @@ class ShowProductSeller extends StatefulWidget {
 class _ShowProductSellerState extends State<ShowProductSeller> {
   bool load = true;
   bool? haveData;
+  List<ProductModel> productModels = [];
 
   @override
   void initState() {
@@ -49,6 +50,7 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
           setState(() {
             load = false;
             haveData = true;
+            productModels.add(model);
           });
         }
       }
@@ -61,7 +63,9 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
       body: load
           ? ShowProgress()
           : haveData!
-              ? Text('Have Data')
+              ? LayoutBuilder(
+                  builder: (context, constraints) => buildListView(constraints),
+                )
               : Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -80,6 +84,40 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
         onPressed: () =>
             Navigator.pushNamed(context, MyConstant.routeAddProduct),
         child: Text('Add'),
+      ),
+    );
+  }
+
+  ListView buildListView(BoxConstraints constraints) {
+    return ListView.builder(
+      itemCount: productModels.length,
+      itemBuilder: (context, index) => Card(
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(4),
+              width: constraints.maxWidth * 0.5 - 4,
+              child: ShowTitle(
+                  title: productModels[index].name,
+                  textStyle: MyConstant().h2Style()),
+            ),
+            Container(
+              padding: EdgeInsets.all(4),
+              width: constraints.maxWidth * 0.5 - 4,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ShowTitle(
+                      title: 'price${productModels[index].price}BTH',
+                      textStyle: MyConstant().h2Style()),
+                  ShowTitle(
+                      title: productModels[index].detail,
+                      textStyle: MyConstant().h3Style()),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
