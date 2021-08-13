@@ -116,7 +116,7 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
                       textStyle: MyConstant().h2Style()),
                   Container(
                     width: constraints.maxWidth * 0.5,
-                    height: constraints.maxWidth * 0.4,
+                    height: constraints.maxWidth * 0.3,
                     child: CachedNetworkImage(
                       fit: BoxFit.cover,
                       imageUrl: createUrl(productModels[index].images),
@@ -129,9 +129,12 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
               ),
             ),
             Container(
+              margin: EdgeInsets.only(top: 30),
               padding: EdgeInsets.all(4),
               width: constraints.maxWidth * 0.5 - 4,
+              height: constraints.maxWidth * 0.4,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ShowTitle(
@@ -140,11 +143,63 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
                   ShowTitle(
                       title: productModels[index].detail,
                       textStyle: MyConstant().h3Style()),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.edit_outlined,
+                            size: 36,
+                          )),
+                      IconButton(
+                          onPressed: () {
+                            print('## You Click Delete from index = $index');
+                            confirmDialogDelete(productModels[index]);
+                          },
+                          icon: Icon(
+                            Icons.delete_outline,
+                            size: 36,
+                          )),
+                    ],
+                  )
                 ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Future<Null> confirmDialogDelete(ProductModel productModel) async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: ListTile(
+          leading: CachedNetworkImage(
+            imageUrl: createUrl(productModel.images),
+            placeholder: (context, url) => ShowProgress(),
+          ),
+          title: ShowTitle(
+            title: 'Delete ${productModel.name} ?',
+            textStyle: MyConstant().h2Style(),
+          ),
+          subtitle: ShowTitle(
+            title: productModel.detail,
+            textStyle: MyConstant().h3Style(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Delete'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+          ),
+        ],
       ),
     );
   }
