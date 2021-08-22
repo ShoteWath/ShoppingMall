@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shoppingmall/models/product_model.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
 import 'package:shoppingmall/widgets/show_progress.dart';
@@ -20,6 +23,7 @@ class _EditProductState extends State<EditProduct> {
   TextEditingController detailController = TextEditingController();
 
   List<String> pathImages = [];
+  List<File?> files = [];
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -44,6 +48,7 @@ class _EditProductState extends State<EditProduct> {
     List<String> strings = string.split(',');
     for (var item in strings) {
       pathImages.add(item.trim());
+      files.add(null);
     }
     print('### pathImages ==>>$pathImages');
   }
@@ -104,25 +109,45 @@ class _EditProductState extends State<EditProduct> {
     );
   }
 
+  Future<Null> chooseImage(int index, ImageSource source) async {
+    try {
+      var result = await ImagePicker().getImage(
+        source: source,
+        maxWidth: 800,
+        maxHeight: 800,
+      );
+      setState(() {
+        files[index] = File(result!.path);
+      });
+    } catch (e) {}
+  }
+
   Container buildImage(BoxConstraints constraints, int index) {
     return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => chooseImage(index, ImageSource.camera),
             icon: Icon(Icons.add_a_photo),
           ),
           Container(
+            padding: EdgeInsets.symmetric(vertical: 8),
             width: constraints.maxWidth * 0.5,
-            child: CachedNetworkImage(
-              imageUrl:
-                  '${MyConstant.domain}/shoppingmall/${pathImages[index]}',
-              placeholder: (context, url) => ShowProgress(),
-            ),
+            child: files[index] == null
+                ? CachedNetworkImage(
+                    imageUrl:
+                        '${MyConstant.domain}/shoppingmall/${pathImages[index]}',
+                    placeholder: (context, url) => ShowProgress(),
+                  )
+                : Image.file(files[index]!),
           ),
           IconButton(
-            onPressed: () => processEdit(),
+            onPressed: () => chooseImage(index, ImageSource.gallery),
             icon: Icon(Icons.add_photo_alternate),
           ),
         ],
