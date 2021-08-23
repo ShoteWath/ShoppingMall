@@ -24,6 +24,8 @@ class _EditProductState extends State<EditProduct> {
 
   List<String> pathImages = [];
   List<File?> files = [];
+  bool statusImage = false; //false => Not Change Image
+
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -111,6 +113,7 @@ class _EditProductState extends State<EditProduct> {
 
   Future<Null> chooseImage(int index, ImageSource source) async {
     try {
+      // ignore: deprecated_member_use
       var result = await ImagePicker().getImage(
         source: source,
         maxWidth: 800,
@@ -118,6 +121,7 @@ class _EditProductState extends State<EditProduct> {
       );
       setState(() {
         files[index] = File(result!.path);
+        statusImage = true;
       });
     } catch (e) {}
   }
@@ -249,7 +253,18 @@ class _EditProductState extends State<EditProduct> {
       String name = nameController.text;
       String price = priceController.text;
       String detail = detailController.text;
-      print('## name = $name,price= $price,detail = $detail');
+      String id = productModel!.id;
+      String images;
+      if (statusImage) {
+        //upload Image and Refresh array PathImage
+        images = 'Wait Refresh';
+      } else {
+        images = pathImages.toString();
+      }
+
+      print('## statuusImage = $statusImage');
+      print('## id = $id, name = $name,price= $price,detail = $detail');
+      print('## images = $images');
     }
   }
 }
