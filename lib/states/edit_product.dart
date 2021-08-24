@@ -1,10 +1,13 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shoppingmall/models/product_model.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
+import 'package:shoppingmall/utility/my_dialog.dart';
 import 'package:shoppingmall/widgets/show_progress.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
 
@@ -248,18 +251,42 @@ class _EditProductState extends State<EditProduct> {
     );
   }
 
-  processEdit() {
+  Future<Null> processEdit() async {
     if (formKey.currentState!.validate()) {
+      MyDialog().showProgressDialog(context);
+
       String name = nameController.text;
       String price = priceController.text;
       String detail = detailController.text;
       String id = productModel!.id;
       String images;
       if (statusImage) {
-        //upload Image and Refresh array PathImage
-        images = 'Wait Refresh';
+        //upload Image and Refresh array PathImages
+        int index = 0;
+        for (var item in files) {
+          if (item != null) {
+            int i = Random().nextInt(1000000);
+            String nameImage = 'productEdit$i.jpg';
+            String apiUploadImage =
+                '${MyConstant.domain}/shoppingmall/saveProduct.php';
+
+            Map<String, dynamic> map = {};
+            map['file'] =
+                await MultipartFile.fromFile(item.path, filename: nameImage);
+            FormData formData = FormData.fromMap(map);
+            await Dio().post(apiUploadImage, data: formData).then((value) {
+              pathImages[index] = '/product/$nameImage';
+            });
+          }
+
+          index++;
+        }
+
+        images = pathImages.toString();
+        Navigator.pop(context);
       } else {
         images = pathImages.toString();
+        Navigator.pop(context);
       }
 
       print('## statuusImage = $statusImage');
