@@ -292,6 +292,10 @@ class _EditProductState extends State<EditProduct> {
       print('## statuusImage = $statusImage');
       print('## id = $id, name = $name,price= $price,detail = $detail');
       print('## images = $images');
+
+      String apiEditProduct =
+          '${MyConstant.domain}/shoppingmall/editProductWhereId.php?isAdd=true&id=$id&name=$name&price=$price&detail=$detail&images=$images';
+      await Dio().get(apiEditProduct).then((value) => Navigator.pop(context));
     }
   }
 }
