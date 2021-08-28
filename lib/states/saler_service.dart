@@ -29,6 +29,7 @@ class _SalerServiceState extends State<SalerService> {
 
   @override
   void initState() {
+    // ignore: todo
     // TODO: implement initState
     super.initState();
     findUserModel();
@@ -64,7 +65,7 @@ class _SalerServiceState extends State<SalerService> {
             ShowSign0ut(),
             Column(
               children: [
-                UserAccountsDrawerHeader(accountName: null, accountEmail: null),
+                buildHead(),
                 menuShowOrder(),
                 menuShopManage(),
                 menuShowProduct(),
@@ -75,6 +76,32 @@ class _SalerServiceState extends State<SalerService> {
       ),
       body: widgets[indexWidget],
     );
+  }
+
+  UserAccountsDrawerHeader buildHead() {
+    return UserAccountsDrawerHeader(
+        otherAccountsPictures: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.face_outlined),
+            iconSize: 36,
+            color: Colors.lightBlue,
+            tooltip: 'Edit Shop',
+          ),
+        ],
+        decoration: BoxDecoration(
+          gradient: RadialGradient(
+            colors: [MyConstant.light, MyConstant.dark],
+            center: Alignment(-0.7, -0.2),
+            radius: 1,
+          ),
+        ),
+        currentAccountPicture: CircleAvatar(
+          backgroundImage:
+              (NetworkImage('${MyConstant.domain}${userModel!.avatar}')),
+        ),
+        accountName: Text(userModel == null ? 'Name' : userModel!.name),
+        accountEmail: Text(userModel == null ? 'Type' : userModel!.type));
   }
 
   ListTile menuShowOrder() {
