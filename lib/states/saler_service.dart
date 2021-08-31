@@ -48,7 +48,7 @@ class _SalerServiceState extends State<SalerService> {
           userModel = UserModel.fromMap(item);
           widgets.add(ShowOrderSeller());
           widgets.add(ShopManageSeller(userModel: userModel!));
-          widgets.add(ShowOrderSeller());
+          widgets.add(ShowProductSeller());
         });
       }
     });
