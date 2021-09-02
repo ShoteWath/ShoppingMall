@@ -113,32 +113,34 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
               padding: EdgeInsets.all(4),
               width: constraints.maxWidth * 0.5 - 4,
               height: constraints.maxWidth * 0.5,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ShowTitle(
-                      title: productModels[index].name,
-                      textStyle: MyConstant().h2Style()),
-                  Container(
-                    width: constraints.maxWidth * 0.5,
-                    height: constraints.maxWidth * 0.3,
-                    child: CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      imageUrl: createUrl(productModels[index].images),
-                      placeholder: (context, url) => ShowProgress(),
-                      errorWidget: (context, url, error) =>
-                          ShowImage(path: MyConstant.image1),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ShowTitle(
+                        title: productModels[index].name,
+                        textStyle: MyConstant().h2Style()),
+                    Container(
+                      width: constraints.maxWidth * 0.5,
+                      height: constraints.maxWidth * 0.5,
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        imageUrl: createUrl(productModels[index].images),
+                        placeholder: (context, url) => ShowProgress(),
+                        errorWidget: (context, url, error) =>
+                            ShowImage(path: MyConstant.image1),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             Container(
               margin: EdgeInsets.only(top: 30),
               padding: EdgeInsets.all(4),
               width: constraints.maxWidth * 0.5 - 4,
-              height: constraints.maxWidth * 0.4,
+              height: constraints.maxWidth * 0.5,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
