@@ -1,10 +1,13 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoppingmall/models/user_model.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
+import 'package:shoppingmall/widgets/show_image.dart';
+import 'package:shoppingmall/widgets/show_progress.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
 
 class EditProfileSaler extends StatefulWidget {
@@ -22,6 +25,7 @@ class _EditProfileSalerState extends State<EditProfileSaler> {
 
   @override
   void initState() {
+    // ignore: todo
     // TODO: implement initState
     super.initState();
     fileUser();
@@ -60,9 +64,59 @@ class _EditProfileSalerState extends State<EditProfileSaler> {
             builName(constraints),
             builAddress(constraints),
             builPhone(constraints),
+            builTitle('Avatar :'),
+            buildAvatar(constraints),
           ],
         ),
       ),
+    );
+  }
+
+  Row buildAvatar(BoxConstraints constraints) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 16),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+          ),
+          child: Row(
+            children: [
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.add_a_photo,
+                  color: MyConstant.dark,
+                ),
+              ),
+              Container(
+                width: constraints.maxWidth * 0.6,
+                height: constraints.maxWidth * 0.6,
+                child: userModel == null
+                    ? ShowProgress()
+                    : Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: userModel!.avatar == null
+                            ? ShowImage(path: MyConstant.avatar)
+                            : CachedNetworkImage(
+                                imageUrl:
+                                    '${MyConstant.domain}${userModel!.avatar}',
+                                placeholder: (context, url) => ShowProgress(),
+                              ),
+                      ),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.add_photo_alternate,
+                  color: MyConstant.dark,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -110,7 +164,7 @@ class _EditProfileSalerState extends State<EditProfileSaler> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          margin: EdgeInsets.only(top: 16),
+          margin: EdgeInsets.symmetric(vertical: 16),
           width: constraints.maxWidth * 0.6,
           child: TextFormField(
             controller: phoneController,
