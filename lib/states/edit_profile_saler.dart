@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoppingmall/models/user_model.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
@@ -22,6 +24,7 @@ class _EditProfileSalerState extends State<EditProfileSaler> {
   TextEditingController nameController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+  LatLng? latLng;
 
   @override
   void initState() {
@@ -29,6 +32,27 @@ class _EditProfileSalerState extends State<EditProfileSaler> {
     // TODO: implement initState
     super.initState();
     fileUser();
+    findLatLng();
+  }
+
+  Future<Null> findLatLng() async {
+    Position? position = await findPosition();
+    if (position != null) {
+      setState(() {
+        latLng = LatLng(position.latitude, position.longitude);
+        print('lat = ${latLng!.latitude}');
+      });
+    }
+  }
+
+  Future<Position?> findPosition() async {
+    Position? position;
+    try {
+      position = await Geolocator.getCurrentPosition();
+    } catch (e) {
+      position = null;
+    }
+    return position;
   }
 
   Future<Null> fileUser() async {
@@ -66,9 +90,46 @@ class _EditProfileSalerState extends State<EditProfileSaler> {
             builPhone(constraints),
             builTitle('Avatar :'),
             buildAvatar(constraints),
+            builTitle('Location :'),
+            buildMap(constraints),
           ],
         ),
       ),
+    );
+  }
+
+  Row buildMap(BoxConstraints constraints) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+          ),
+          margin: EdgeInsets.symmetric(vertical: 16),
+          width: constraints.maxWidth * 0.7,
+          height: constraints.maxWidth * 0.5,
+          child: latLng == null
+              ? ShowProgress()
+              : GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target: latLng!,
+                    zoom: 16,
+                  ),
+                  onMapCreated: (controller) {},
+                  markers: <Marker>[
+                    Marker(
+                      markerId: MarkerId('id'),
+                      position: latLng!,
+                      infoWindow: InfoWindow(
+                          title: 'You Location',
+                          snippet:
+                              'lat = ${latLng!.latitude},lng = ${latLng!.longitude}'),
+                    ),
+                  ].toSet(),
+                ),
+        ),
+      ],
     );
   }
 
