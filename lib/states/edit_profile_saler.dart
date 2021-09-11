@@ -25,6 +25,7 @@ class _EditProfileSalerState extends State<EditProfileSaler> {
   TextEditingController addressController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   LatLng? latLng;
+  final formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -78,24 +79,53 @@ class _EditProfileSalerState extends State<EditProfileSaler> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Profile Saler'),
+        title: Text('Edit Profile Seller'),
+        actions: [
+          IconButton(
+            onPressed: () => processEditProfileSeller(),
+            icon: Icon(Icons.edit),
+            tooltip: 'Edit Profile Seller',
+          ),
+        ],
       ),
       body: LayoutBuilder(
-        builder: (context, constraints) => ListView(
-          padding: EdgeInsets.all(16),
-          children: [
-            builTitle('General :'),
-            builName(constraints),
-            builAddress(constraints),
-            builPhone(constraints),
-            builTitle('Avatar :'),
-            buildAvatar(constraints),
-            builTitle('Location :'),
-            buildMap(constraints),
-          ],
+        builder: (context, constraints) => GestureDetector(
+          onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+          behavior: HitTestBehavior.opaque,
+          child: Form(
+            key: formKey,
+            child: ListView(
+              padding: EdgeInsets.all(16),
+              children: [
+                builTitle('General :'),
+                builName(constraints),
+                builAddress(constraints),
+                builPhone(constraints),
+                builTitle('Avatar :'),
+                buildAvatar(constraints),
+                builTitle('Location :'),
+                buildMap(constraints),
+                buildButtonEditProfile(),
+              ],
+            ),
+          ),
         ),
       ),
     );
+  }
+
+  Future<Null> processEditProfileSeller() async {
+    print('processEditProfileSeller Work');
+    if (formKey.currentState!.validate()) {
+      
+    }  
+  }
+
+  ElevatedButton buildButtonEditProfile() {
+    return ElevatedButton.icon(
+        onPressed: () => processEditProfileSeller(),
+        icon: Icon(Icons.edit),
+        label: Text('Edit Profile Seller'));
   }
 
   Row buildMap(BoxConstraints constraints) {
@@ -158,6 +188,7 @@ class _EditProfileSalerState extends State<EditProfileSaler> {
                     ? ShowProgress()
                     : Padding(
                         padding: const EdgeInsets.all(8.0),
+                        // ignore: unnecessary_null_comparison
                         child: userModel!.avatar == null
                             ? ShowImage(path: MyConstant.avatar)
                             : CachedNetworkImage(
@@ -189,6 +220,13 @@ class _EditProfileSalerState extends State<EditProfileSaler> {
           margin: EdgeInsets.only(top: 16),
           width: constraints.maxWidth * 0.6,
           child: TextFormField(
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please Fill Name ';
+              } else {
+                return null;
+              }
+            },
             controller: nameController,
             decoration: InputDecoration(
               labelText: 'Name :',
@@ -208,6 +246,13 @@ class _EditProfileSalerState extends State<EditProfileSaler> {
           margin: EdgeInsets.only(top: 16),
           width: constraints.maxWidth * 0.6,
           child: TextFormField(
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please Fill Address ';
+              } else {
+                return null;
+              }
+            },
             maxLines: 4,
             controller: addressController,
             decoration: InputDecoration(
@@ -227,7 +272,14 @@ class _EditProfileSalerState extends State<EditProfileSaler> {
         Container(
           margin: EdgeInsets.symmetric(vertical: 16),
           width: constraints.maxWidth * 0.6,
-          child: TextFormField(
+          child: TextFormField(keyboardType: TextInputType.phone,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please Fill Phone ';
+              } else {
+                return null;
+              }
+            },
             controller: phoneController,
             decoration: InputDecoration(
               labelText: 'Phone :',
