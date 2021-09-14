@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
@@ -120,8 +121,30 @@ class _EditProfileSalerState extends State<EditProfileSaler> {
 
   Future<Null> processEditProfileSeller() async {
     print('processEditProfileSeller Work');
-    if (formKey.currentState!.validate()) {}
+    if (formKey.currentState!.validate()) {
+      if (file == null) {
+        print('## User Cerent Avatar');
+        editValueToMySQL();
+      } else {
+        String apiSaveAvatar =
+            '${MyConstant.domain}/shoppingmall/saveAvatar.php';
+
+        List<String> nameAvatars = userModel!.avatar.split('/');
+        String nameFile = nameAvatars[nameAvatars.length - 1];
+        nameFile = 'edit${Random(100).nextInt(100)}$nameFile';
+        print('## User New Avatar nameFile ==>>$nameFile');
+        Map<String, dynamic> map = {};
+        map['file'] =
+            await MultipartFile.fromFile(file!.path, filename: nameFile);
+        FormData formData = FormData.fromMap(map);
+        await Dio()
+            .post(apiSaveAvatar, data: formData)
+            .then((value) => print('Upload Succes'));
+      }
+    }
   }
+
+  Future<Null> editValueToMySQL() async {}
 
   ElevatedButton buildButtonEditProfile() {
     return ElevatedButton.icon(

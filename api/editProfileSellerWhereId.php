@@ -21,14 +21,14 @@ if (isset($_GET)) {
 			
 		$id = $_GET['id'];
 		$name = $_GET['name'];
-		$Address = $_GET['Address'];
+		$Address = $_GET['address'];
 		$phone = $_GET['phone'];
 		$avatar = $_GET['avatar'];
 		$lat = $_GET['lat'];
 		$lng = $_GET['lng'];		
 		
 									
-		$sql = "UPDATE `user` SET `name` = '$name', `Address` = '$Address', `phone` = '$phone', `avatar` = '$avatar', `lat` = '$lat', `lng` = '$lng', WHERE id = '$id'";
+		$sql = "UPDATE `user` SET `name` = '$name', `address` = '$address', `phone` = '$phone', `avatar` = '$avatar', `lat` = '$lat', `lng` = '$lng', WHERE id = '$id'";
 
 		$result = mysqli_query($link, $sql);
 
