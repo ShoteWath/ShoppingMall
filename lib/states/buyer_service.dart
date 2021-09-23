@@ -14,7 +14,11 @@ class BuyerService extends StatefulWidget {
 }
 
 class _BuyerServiceState extends State<BuyerService> {
-  List<Widget> widgets = [ShowAllShopBuyer(), MyMoneyBuyer(), MyOrderBuyer()];
+  List<Widget> widgets = [
+    ShowAllShopBuyer(),
+    MyMoneyBuyer(),
+    MyOrderBuyer(),
+  ];
   int indexWidget = 0;
 
   @override
