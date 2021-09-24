@@ -64,9 +64,13 @@ class _ShopManageSellerState extends State<ShopManageSeller> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: ShowTitle(
-                            title: userModel!.name,
-                            textStyle: MyConstant().h1Style()),
+                        child: Column(
+                          children: [
+                            ShowTitle(
+                                title: (cutWord(userModel!.name)),
+                                textStyle: MyConstant().h1Style()),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -147,4 +151,14 @@ class _ShopManageSellerState extends State<ShopManageSeller> {
           ),
         ));
   }
+}
+
+String cutWord(String name) {
+  String result = name;
+
+  if (result.length > 14) {
+    result = result.substring(0, 10);
+    result = ' $result....';
+  }
+  return result;
 }

@@ -277,6 +277,7 @@ class _EditProfileSalerState extends State<EditProfileSaler> {
           margin: EdgeInsets.only(top: 16),
           width: constraints.maxWidth * 0.6,
           child: TextFormField(
+            maxLines: 2,
             validator: (value) {
               if (value!.isEmpty) {
                 return 'Please Fill Name ';
