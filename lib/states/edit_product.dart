@@ -108,7 +108,7 @@ class _EditProductState extends State<EditProduct> {
       margin: EdgeInsets.only(top: 16),
       width: constraints.maxWidth,
       child: ElevatedButton.icon(
-          onPressed: () {},
+          onPressed: () => processEdit(),
           icon: Icon(Icons.edit),
           label: Text('Edit Product')),
     );
