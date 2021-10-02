@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shoppingmall/bodys/shop_manage_seller.dart';
 import 'package:shoppingmall/models/product_model.dart';
 import 'package:shoppingmall/models/user_model.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
@@ -25,6 +26,7 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
   List<ProductModel> productModels = [];
   List<List<String>> listImages = [];
   int indexImage = 0;
+  int amountInt = 1;
 
   @override
   void initState() {
@@ -129,11 +131,12 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
                           textStyle: MyConstant().h2Style(),
                         ),
                         ShowTitle(
-                          title: 'price = ${productModels[index].price}THB',
+                          title: 'Price = ${productModels[index].price}THB',
                           textStyle: MyConstant().h3Style(),
                         ),
                         ShowTitle(
-                          title: 'detail = ${productModels[index].detail}',
+                          title: cutWord(
+                              'Detail = ${productModels[index].detail}'),
                           textStyle: MyConstant().h3Style(),
                         ),
                       ],
@@ -178,62 +181,147 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
               textStyle: MyConstant().h3Style(),
             ),
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CachedNetworkImage(
-                imageUrl:
-                    '${MyConstant.domain}/shoppingmall${images[indexImage]}',
-                placeholder: (context, url) => ShowProgress(),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CachedNetworkImage(
+                  imageUrl:
+                      '${MyConstant.domain}/shoppingmall${images[indexImage]}',
+                  placeholder: (context, url) => ShowProgress(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            indexImage = 0;
+                            print('indexImage = $indexImage');
+                          });
+                        },
+                        icon: Icon(Icons.filter_1),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            indexImage = 1;
+                            print('indexImage = $indexImage');
+                          });
+                        },
+                        icon: Icon(Icons.filter_2_sharp),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            indexImage = 2;
+                            print('indexImage = $indexImage');
+                          });
+                        },
+                        icon: Icon(Icons.filter_3),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            indexImage = 3;
+                            print('indexImage = $indexImage');
+                          });
+                        },
+                        icon: Icon(Icons.filter_4),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
+                  children: [
+                    ShowTitle(
+                        title: 'รายละเอียด :',
+                        textStyle: MyConstant().h2Style()),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 200,
+                        child: ShowTitle(
+                            title: productModel.detail,
+                            textStyle: MyConstant().h3Style()),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     IconButton(
                       onPressed: () {
-                        setState(() {
-                          indexImage = 0;
-                          print('indexImage = $indexImage');
-                        });
+                        if (amountInt != 1) {
+                          setState(() {
+                            amountInt--;
+                          });
+                        }
                       },
-                      icon: Icon(Icons.filter_1),
+                      icon: Icon(
+                        Icons.remove_circle_outline,
+                        color: MyConstant.dark,
+                      ),
+                    ),
+                    ShowTitle(
+                      title: amountInt.toString(),
+                      textStyle: MyConstant().h1Style(),
                     ),
                     IconButton(
                       onPressed: () {
                         setState(() {
-                          indexImage = 1;
-                          print('indexImage = $indexImage');
+                          amountInt++;
                         });
                       },
-                      icon: Icon(Icons.filter_2_sharp),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          indexImage = 2;
-                          print('indexImage = $indexImage');
-                        });
-                      },
-                      icon: Icon(Icons.filter_3),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          indexImage = 3;
-                          print('indexImage = $indexImage');
-                        });
-                      },
-                      icon: Icon(Icons.filter_4),
+                      icon: Icon(
+                        Icons.add_circle_outline,
+                        color: MyConstant.dark,
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(
+                    'Add Cart',
+                    style: MyConstant().h2BlueStyle(),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(
+                    'Cancel',
+                    style: MyConstant().h2RedStyle(),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  String cutWord(String string) {
+    String result = string;
+    if (result.length >= 100) {
+      result = result.substring(0, 100);
+      result = '$result...';
+    }
+    return result;
   }
 }
