@@ -1,3 +1,7 @@
+import 'package:shoppingmall/models/sqlite_model.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+
 class SQLiteHelper {
   final String nameDatabase = 'shoppingmall.db';
   final int version = 1;
@@ -7,12 +11,35 @@ class SQLiteHelper {
   final String columnIdProduct = 'idProduct';
   final String columnName = 'name';
   final String columnPricc = 'price';
-  final String columnAmount = 'Amount';
+  final String columnAmount = 'amount';
   final String columnSum = 'sum';
 
   SQLiteHelper() {
     initisDatabase();
   }
 
-  Future<Null> initisDatabase() async {}
+  Future<Null> initisDatabase() async {
+    await openDatabase(
+      join(await getDatabasesPath(), nameDatabase),
+      onCreate: (db, version) => db.execute(
+          'CREATE TABLE $tableDatabase ($columnId INTEGER PRIMARY KEY,$columnIdSeller TEXT, $columnIdProduct TEXT, $columnName TEXT, $columnPricc TEXT, $columnAmount, $columnSum TEXT)'),
+      version: version,
+    );
+  }
+
+  Future<Database> connectedDatabase() async {
+    return await openDatabase(join(await getDatabasesPath(), nameDatabase));
+  }
+
+  Future<List<SQLiteModel>> readSQList() async {
+    Database database = await connectedDatabase();
+    List<SQLiteModel> result = [];
+    List<Map<String, dynamic>> maps = await database.query(tableDatabase);
+    print('### maps on SQLiteHelper ==>>$maps');
+    for (var item in maps) {
+      SQLiteModel model = SQLiteModel.fromMap(item);
+      result.add(model);
+    }
+    return result;
+  }
 }
