@@ -33,13 +33,19 @@ class SQLiteHelper {
 
   Future<List<SQLiteModel>> readSQList() async {
     Database database = await connectedDatabase();
-    List<SQLiteModel> result = [];
+    List<SQLiteModel> results = [];
     List<Map<String, dynamic>> maps = await database.query(tableDatabase);
     print('### maps on SQLiteHelper ==>>$maps');
     for (var item in maps) {
       SQLiteModel model = SQLiteModel.fromMap(item);
-      result.add(model);
+      results.add(model);
     }
-    return result;
+    return results;
+  }
+
+  Future<Null> insertValueToSQLite(SQLiteModel sqLiteModel) async {
+    Database database = await connectedDatabase();
+    await database.insert(tableDatabase, sqLiteModel.toMap()).then(
+        (value) => print('### insert Value name ==>>${sqLiteModel.name}'));
   }
 }

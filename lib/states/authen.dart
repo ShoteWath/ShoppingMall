@@ -17,7 +17,7 @@ class Authen extends StatefulWidget {
 }
 
 class _AuthenState extends State<Authen> {
-  bool statusRedeye = true;
+  bool statusRedEye = true;
   final formKey = GlobalKey<FormState>();
   TextEditingController userController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -34,7 +34,7 @@ class _AuthenState extends State<Authen> {
             key: formKey,
             child: ListView(
               children: [
-                buildimage(size),
+                buildImage(size),
                 buildAppName(),
                 buildUser(size),
                 buildPassword(size),
@@ -53,7 +53,7 @@ class _AuthenState extends State<Authen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ShowTitle(
-          title: 'Non Account ?',
+          title: 'Non Account ? ',
           textStyle: MyConstant().h3Style(),
         ),
         TextButton(
@@ -78,7 +78,7 @@ class _AuthenState extends State<Authen> {
               if (formKey.currentState!.validate()) {
                 String user = userController.text;
                 String password = passwordController.text;
-                print('## user =$user,password = $password ');
+                print('## user = $user, password = $password');
                 checkAuthen(user: user, password: password);
               }
             },
@@ -93,17 +93,18 @@ class _AuthenState extends State<Authen> {
     String apiCheckAuthen =
         '${MyConstant.domain}/shoppingmall/getUserWhereUser.php?isAdd=true&user=$user';
     await Dio().get(apiCheckAuthen).then((value) async {
-      print('## value for API==>>$value');
+      print('## value for API ==>> $value');
       if (value.toString() == 'null') {
         MyDialog()
-            .normalDialog(context, 'User False!!!', 'No $user in my database');
+            .normalDialog(context, 'User False !!!', 'No $user in my Database');
       } else {
         for (var item in json.decode(value.data)) {
           UserModel model = UserModel.fromMap(item);
           if (password == model.password) {
-            // Succese Authen
+            // Success Authen
             String type = model.type;
-            print('## Authen Succese in Type ==>$type');
+            print('## Authen Success in Type ==> $type');
+
             SharedPreferences preferences =
                 await SharedPreferences.getInstance();
             preferences.setString('id', model.id);
@@ -124,11 +125,10 @@ class _AuthenState extends State<Authen> {
                 Navigator.pushNamedAndRemoveUntil(
                     context, MyConstant.routeRiderService, (route) => false);
                 break;
-
               default:
             }
           } else {
-            // Authen False;
+            // Authen False
             MyDialog().normalDialog(context, 'Password False !!!',
                 'Password False Please Try Again');
           }
@@ -191,21 +191,21 @@ class _AuthenState extends State<Authen> {
                 return null;
               }
             },
-            obscureText: statusRedeye,
+            obscureText: statusRedEye,
             decoration: InputDecoration(
               suffixIcon: IconButton(
                 onPressed: () {
                   setState(() {
-                    statusRedeye = !statusRedeye;
+                    statusRedEye = !statusRedEye;
                   });
                 },
-                icon: statusRedeye
+                icon: statusRedEye
                     ? Icon(
-                        Icons.remove_red_eye_outlined,
+                        Icons.remove_red_eye,
                         color: MyConstant.dark,
                       )
                     : Icon(
-                        Icons.remove_red_eye,
+                        Icons.remove_red_eye_outlined,
                         color: MyConstant.dark,
                       ),
               ),
@@ -242,13 +242,13 @@ class _AuthenState extends State<Authen> {
     );
   }
 
-  Row buildimage(double size) {
+  Row buildImage(double size) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
           width: size * 0.6,
-          child: ShowImage(path: MyConstant.image1),
+          child: ShowImage(path: MyConstant.image4),
         ),
       ],
     );
