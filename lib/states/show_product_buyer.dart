@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -321,9 +320,10 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
                     int sumInt = int.parse(price) * amountInt;
                     String sum = sumInt.toString();
                     // Navigator.pop(context);
-                    if (currentIdSeller == idSeller) {
-                      print(
-                          '### idSeller ==>>$idSeller,idProduct = $idProduct,name = $name,price = $price,amount = $amount,sum = $sum');
+                    print(
+                        '### idSeller ==>>$idSeller,idProduct = $idProduct,name = $name,price = $price,amount = $amount,sum = $sum');
+                    if ((currentIdSeller == idSeller) ||
+                        (currentIdSeller == null)) {
                       SQLiteModel sqLiteModel = SQLiteModel(
                           idSeller: idSeller,
                           idProduct: idProduct,
@@ -338,8 +338,10 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
                         Navigator.pop(context);
                       });
                     } else {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
                       MyDialog().normalDialog(context, 'ร้านผิด ?',
-                          'กรุณาเลือกสินค้าที่ ร้านเดิม ให้เส็จก่อน เลือกร้านอื่น ค่ะ');
+                          'กรุณาเลือกสินค้าที่ร้านเดิมให้เส็จ ก่อนเลือกร้านอื่น ค่ะ');
                     }
                   },
                   child: Text(
