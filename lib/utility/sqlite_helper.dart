@@ -48,4 +48,11 @@ class SQLiteHelper {
     await database.insert(tableDatabase, sqLiteModel.toMap()).then(
         (value) => print('### insert Value name ==>>${sqLiteModel.name}'));
   }
+
+  Future<void> deleteSQLiteWhereId(int id) async {
+    Database database = await connectedDatabase();
+    await database
+        .delete(tableDatabase, where: '$columnId = $id')
+        .then((value) => print('### Success Delete id ==> $id'));
+  }
 }
