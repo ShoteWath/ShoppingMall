@@ -55,4 +55,6 @@ class SQLiteHelper {
         .delete(tableDatabase, where: '$columnId = $id')
         .then((value) => print('### Success Delete id ==> $id'));
   }
+
+  emptySQLite() {}
 }

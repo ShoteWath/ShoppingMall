@@ -1,10 +1,12 @@
 import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shoppingmall/models/sqlite_model.dart';
 import 'package:shoppingmall/models/user_model.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
 import 'package:shoppingmall/utility/sqlite_helper.dart';
+import 'package:shoppingmall/widgets/show_image.dart';
 import 'package:shoppingmall/widgets/show_progress.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
 
@@ -32,8 +34,9 @@ class _ShowCartState extends State<ShowCart> {
     if (sqliteModels.isNotEmpty) {
       sqliteModels.clear();
     }
+
     await SQLiteHelper().readSQList().then((value) {
-      // print('### value on processReadSQLite ==>>$value');
+      // print('### value on processReadSQLite ==>> $value');
       setState(() {
         load = false;
         sqliteModels = value;
@@ -55,7 +58,7 @@ class _ShowCartState extends State<ShowCart> {
 
   Future<void> findDetailSeller() async {
     String idSeller = sqliteModels[0].idSeller;
-    print('### idSeller ==>>$idSeller');
+    print('### idSeller ==>> $idSeller');
     String apiGetUserWhereId =
         '${MyConstant.domain}/shoppingmall/getUserWhereId.php?isAdd=true&id=$idSeller';
     await Dio().get(apiGetUserWhereId).then((value) {
@@ -75,18 +78,89 @@ class _ShowCartState extends State<ShowCart> {
       ),
       body: load
           ? ShowProgress()
-          : SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  showSeller(),
-                  buildHead(),
-                  listProduct(),
-                  buildDivider(),
-                  buildTotal()
-                ],
+          : sqliteModels.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 16),
+                        width: 200,
+                        child: ShowImage(path: MyConstant.image1),
+                      ),
+                      ShowTitle(
+                          title: 'Empty Cart',
+                          textStyle: MyConstant().h1Style()),
+                    ],
+                  ),
+                )
+              : buildContent(),
+    );
+  }
+
+  Column buildContent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        showSeller(),
+        buildHead(),
+        listProduct(),
+        buildDivider(),
+        buildTotal(),
+        buildDivider(),
+        buttonController(),
+      ],
+    );
+  }
+
+  Future<void> confirmEmptyCart() async {
+    // print('### confirmEmptyCart Work');
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: ListTile(
+                leading: ShowImage(path: MyConstant.image4),
+                title: ShowTitle(
+                    title: 'คุณต้องการจะ delete ?',
+                    textStyle: MyConstant().h2BlueStyle()),
+                subtitle: ShowTitle(
+                    title: 'Product ทั้งหมด ใน ตะกร้า ใช่ไหม ?',
+                    textStyle: MyConstant().h3Style()),
               ),
-            ),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    await SQLiteHelper().emptySQLite().then((value) {
+                      Navigator.pop(context);
+                      processReadSQLite();
+                    });
+                  },
+                  child: Text('Delete'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('Cancel'),
+                ),
+              ],
+            ));
+  }
+
+  Row buttonController() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        ElevatedButton(
+          onPressed: () {},
+          child: Text('Order'),
+        ),
+        Container(
+          margin: EdgeInsets.only(left: 4, right: 8),
+          child: ElevatedButton(
+            onPressed: () => confirmEmptyCart(),
+            child: Text('Empty Cart'),
+          ),
+        ),
+      ],
     );
   }
 
@@ -94,13 +168,13 @@ class _ShowCartState extends State<ShowCart> {
     return Row(
       children: [
         Expanded(
-          flex: 5,
+          flex: 4,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ShowTitle(
                 title: 'Total :',
-                textStyle: MyConstant().h2Style(),
+                textStyle: MyConstant().h2BlueStyle(),
               ),
             ],
           ),
@@ -168,17 +242,18 @@ class _ShowCartState extends State<ShowCart> {
           Expanded(
             flex: 1,
             child: IconButton(
-                onPressed: () async {
-                  int idSQLite = sqliteModels[index].id!;
-                  print('### Delete idSQLite ==>>$idSQLite');
-                  await SQLiteHelper()
-                      .deleteSQLiteWhereId(idSQLite)
-                      .then((value) => processReadSQLite());
-                },
-                icon: Icon(
-                  Icons.delete_forever_outlined,
-                  color: Colors.red.shade700,
-                )),
+              onPressed: () async {
+                int idSQLite = sqliteModels[index].id!;
+                print('### Delete idSQLite ==>> $idSQLite');
+                await SQLiteHelper()
+                    .deleteSQLiteWhereId(idSQLite)
+                    .then((value) => processReadSQLite());
+              },
+              icon: Icon(
+                Icons.delete_forever_outlined,
+                color: Colors.red.shade700,
+              ),
+            ),
           ),
         ],
       ),
@@ -197,8 +272,8 @@ class _ShowCartState extends State<ShowCart> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 8),
                 child: ShowTitle(
-                  title: 'Product',
-                  textStyle: MyConstant().h3Style(),
+                  title: 'Produce',
+                  textStyle: MyConstant().h2Style(),
                 ),
               ),
             ),
@@ -206,21 +281,21 @@ class _ShowCartState extends State<ShowCart> {
               flex: 1,
               child: ShowTitle(
                 title: 'Price',
-                textStyle: MyConstant().h3Style(),
+                textStyle: MyConstant().h2Style(),
               ),
             ),
             Expanded(
               flex: 1,
               child: ShowTitle(
                 title: 'Amt',
-                textStyle: MyConstant().h3Style(),
+                textStyle: MyConstant().h2Style(),
               ),
             ),
             Expanded(
               flex: 1,
               child: ShowTitle(
                 title: 'Sum',
-                textStyle: MyConstant().h3Style(),
+                textStyle: MyConstant().h2Style(),
               ),
             ),
             Expanded(
