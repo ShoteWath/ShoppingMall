@@ -24,55 +24,69 @@ class _BankState extends State<Bank> {
     );
   }
 
-  Card buildBKKbank() {
-    return Card(
-      child: ListTile(
-        leading: Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            color: Colors.indigo,
-            borderRadius: BorderRadius.circular(15),
+  Widget buildBKKbank() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      height: 150,
+      child: Center(
+        child: Card(
+          color: Colors.indigo.shade100,
+          child: ListTile(
+            leading: Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: Colors.indigo,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SvgPicture.asset('images/bbl.svg'),
+              ),
+            ),
+            title: ShowTitle(
+              title: 'ธนาคารกรุงเทพ สาขาบิ๊กซี บางพลี',
+              textStyle: MyConstant().h2Style(),
+            ),
+            subtitle: ShowTitle(
+              title: 'ชื่อบัญชี นายโชติวัธ นาคะราเขต เลขบัญชี 124-0-02146-5',
+              textStyle: MyConstant().h3Style(),
+            ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SvgPicture.asset('images/bbl.svg'),
-          ),
-        ),
-        title: ShowTitle(
-          title: 'ธนาคารกรุงเทพ สาขาบิ๊กซี บางพลี',
-          textStyle: MyConstant().h2Style(),
-        ),
-        subtitle: ShowTitle(
-          title: 'ชื่อบัญชี นายโชติวัธ นาคะราเขต เลขบัญชี 124-0-02146-5',
-          textStyle: MyConstant().h3Style(),
         ),
       ),
     );
   }
 
-  Card buildKbank() {
-    return Card(
-      child: ListTile(
-        leading: Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            color: Colors.green.shade700,
-            borderRadius: BorderRadius.circular(15),
+  Container buildKbank() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      height: 150,
+      child: Center(
+        child: Card(
+          color: Colors.green[100],
+          child: ListTile(
+            leading: Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: Colors.green.shade700,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SvgPicture.asset('images/kbank.svg'),
+              ),
+            ),
+            title: ShowTitle(
+              title: 'ธนาคารกสิกรไทย สาขาบิ๊กซี บางพลี',
+              textStyle: MyConstant().h2Style(),
+            ),
+            subtitle: ShowTitle(
+              title: 'ชื่อบัญชี นายโชติวัธ นาคะราเขต เลขบัญชี 322-0-4149-3',
+              textStyle: MyConstant().h3Style(),
+            ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SvgPicture.asset('images/kbank.svg'),
-          ),
-        ),
-        title: ShowTitle(
-          title: 'ธนาคารกสิกรไทย สาขาบิ๊กซี บางพลี',
-          textStyle: MyConstant().h2Style(),
-        ),
-        subtitle: ShowTitle(
-          title: 'ชื่อบัญชี นายโชติวัธ นาคะราเขต เลขบัญชี 322-0-4149-3',
-          textStyle: MyConstant().h3Style(),
         ),
       ),
     );
