@@ -1,10 +1,13 @@
-// ignore_for_file: unused_local_variable
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:omise_flutter/omise_flutter.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
+import 'package:shoppingmall/utility/my_dialog.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
+
+import 'package:http/http.dart' as http;
 
 class Credic extends StatefulWidget {
   const Credic({Key? key}) : super(key: key);
@@ -17,18 +20,18 @@ class _CredicState extends State<Credic> {
   String? name,
       surname,
       idCard,
-      expiryDateMouth,
-      expiriDateYear,
+      expiryDateMonth,
+      expiryDateYear,
       cvc,
       amount,
-      expiryDateStr;
+      expriyDateStr;
   MaskTextInputFormatter idCardMask =
       MaskTextInputFormatter(mask: '#### - #### - #### - ####');
   MaskTextInputFormatter expiryDateMask =
       MaskTextInputFormatter(mask: '## / ####');
   MaskTextInputFormatter cvcMask = MaskTextInputFormatter(mask: '###');
 
-  var formkey = GlobalKey<FormState>();
+  var formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -36,27 +39,32 @@ class _CredicState extends State<Credic> {
       body: GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         behavior: HitTestBehavior.opaque,
-        child: SingleChildScrollView(
-          child: Form(
-            key: formkey,
-            child: Stack(
-              children: [
-                Column(
+        child: Form(
+          key: formKey,
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     buildTitle('Name Surname'),
-                    buildNameSurname(),
+                    buildNamSurname(),
                     buildTitle('ID Card'),
                     formIDcard(),
                     buildExpiryCvc(),
                     buildTitle('Amount :'),
                     formAmount(),
                     // Spacer(),
-                    buttonAddMoney(),
                   ],
                 ),
-              ],
-            ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  buttonAddMoney(),
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -65,11 +73,10 @@ class _CredicState extends State<Credic> {
 
   Container buttonAddMoney() {
     return Container(
-      margin: EdgeInsets.only(top: 30),
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          if (formkey.currentState!.validate()) {
+          if (formKey.currentState!.validate()) {
             getTokenAndChargeOmise();
           }
         },
@@ -82,15 +89,49 @@ class _CredicState extends State<Credic> {
     String publicKey = MyConstant.publicKey;
 
     print(
-        ' name = $name,surname = $surname, publicKey =$publicKey,idCard ==>>$idCard,expiryDateStr ==>> $expiryDateStr,expiryDateMount ==>> $expiryDateMouth,expiryDateYear ==>> $expiriDateYear,cvc ==>>$cvc');
+        'name = $name, surname = $surname, publicKey = $publicKey, idCard ==>> $idCard, expiryDataStr = $expriyDateStr, expiryDateMouth ==>> $expiryDateMonth, expiryDatyYear ==>> $expiryDateYear, cvc --> $cvc');
 
     OmiseFlutter omiseFlutter = OmiseFlutter(publicKey);
     await omiseFlutter.token
-        .create('$name' '$surname', idCard!, expiryDateMouth!, expiriDateYear!,
-            cvc!)
-        .then((value) {
+        .create(
+            '$name $surname', idCard!, expiryDateMonth!, expiryDateYear!, cvc!)
+        .then((value) async {
       String token = value.id.toString();
-      print('token ==>>$token');
+      print('token ==>> $token');
+
+      String secreKey = MyConstant.secreKey;
+      String urlAPI = 'https://api.omise.co/charges';
+      String basicAuth = 'Basic ' + base64Encode(utf8.encode(secreKey + ":"));
+
+      Map<String, String> headerMap = {};
+      headerMap['authorization'] = basicAuth;
+      headerMap['Cache-Control'] = 'no-cache';
+      headerMap['Content-Type'] = 'application/x-www-form-urlencoded';
+
+      String zero = '00';
+      amount = '$amount$zero';
+      print('amount00 ==>> $amount');
+
+      Map<String, dynamic> data = {};
+      data['amount'] = amount;
+      data['currency'] = 'thb';
+      data['card'] = token;
+
+      Uri uri = Uri.parse(urlAPI);
+
+      http.Response response = await http.post(
+        uri,
+        headers: headerMap,
+        body: data,
+      );
+
+      var resultCharge = json.decode(response.body);
+      // print('resultCharge = $resultCharge');
+      print('status ของการตัดบัตร --->>> ${resultCharge['status']}');
+    }).catchError((value) {
+      String title = value.code;
+      String message = value.message;
+      MyDialog().normalDialog(context, title, message);
     });
   }
 
@@ -101,6 +142,7 @@ class _CredicState extends State<Credic> {
             if (value!.isEmpty) {
               return 'Please Fill Amount in Blank';
             } else {
+              amount = value.trim();
               return null;
             }
           },
@@ -127,8 +169,8 @@ class _CredicState extends State<Credic> {
           Expanded(
             child: Column(
               children: [
-                buildTitle('Expiry Date'),
-                formExpiryData(),
+                buildTitle('Expiry Date :'),
+                formExpriyDate(),
               ],
             ),
           ),
@@ -147,22 +189,22 @@ class _CredicState extends State<Credic> {
     );
   }
 
-  Widget formExpiryData() => TextFormField(
+  Widget formExpriyDate() => TextFormField(
         validator: (value) {
           if (value!.isEmpty) {
             return 'Please Fill Expiry Date in Blank';
           } else {
-            if (expiryDateStr!.length != 6) {
+            if (expriyDateStr!.length != 6) {
               return 'กรุณา กรอกให้ครบ';
             } else {
-              expiryDateMouth = expiryDateStr!.substring(0, 2);
-              expiriDateYear = expiryDateStr!.substring(2, 6);
+              expiryDateMonth = expriyDateStr!.substring(0, 2);
+              expiryDateYear = expriyDateStr!.substring(2, 6);
 
-              int expiryDateMouthInt = int.parse(expiryDateMouth!);
-              expiryDateMouth = expiryDateMouthInt.toString();
+              int expiryDateMouthInt = int.parse(expiryDateMonth!);
+              expiryDateMonth = expiryDateMouthInt.toString();
 
               if (expiryDateMouthInt > 12) {
-                return 'กรอกเดือนผิดค่ะ';
+                return 'เดือนไม่ควรเกิน 12';
               } else {
                 return null;
               }
@@ -170,7 +212,7 @@ class _CredicState extends State<Credic> {
           }
         },
         onChanged: (value) {
-          expiryDateStr = expiryDateMask.getUnmaskedText();
+          expriyDateStr = expiryDateMask.getUnmaskedText();
         },
         inputFormatters: [expiryDateMask],
         keyboardType: TextInputType.number,
@@ -188,10 +230,8 @@ class _CredicState extends State<Credic> {
             return 'Please Fill CVC in Blank';
           } else {
             if (cvc!.length != 3) {
-              return 'CVC ต้องมี 3 ตัว';
-            } else {
-              return null;
-            }
+              return 'cvc ต้องมี 3 ตัว';
+            } else {}
           }
         },
         onChanged: (value) {
@@ -207,7 +247,7 @@ class _CredicState extends State<Credic> {
         ),
       );
 
-  Container buildNameSurname() {
+  Container buildNamSurname() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -234,7 +274,7 @@ class _CredicState extends State<Credic> {
               return 'Please Fill ID Card in Blank';
             } else {
               if (idCard!.length != 16) {
-                return 'ID Card จะต้องมี 16 ตัวอักษร ค่ะ';
+                return 'ID Card ต้องมี 16 ตัวอักษร คะ';
               } else {
                 return null;
               }
@@ -256,47 +296,44 @@ class _CredicState extends State<Credic> {
       );
 
   Widget formName() => Expanded(
-        child: TextFormField(
-          validator: (value) {
-            if (value!.isEmpty) {
-              return 'Please Fill Name in Blank';
-            } else {
-              name = value.trim();
-              return null;
-            }
-          },
-          decoration: InputDecoration(
-            label: ShowTitle(title: 'Name :'),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
+          child: TextFormField(
+        validator: (value) {
+          if (value!.isEmpty) {
+            return 'Please Fill Name in Blank';
+          } else {
+            name = value.trim();
+            return null;
+          }
+        },
+        decoration: InputDecoration(
+          label: ShowTitle(title: 'Name :'),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
           ),
         ),
-      );
+      ));
+
   Widget formSurName() => Expanded(
-        child: TextFormField(
-          validator: (value) {
-            if (value!.isEmpty) {
-              return 'Please Fill Surname in Blank';
-            } else {
-              surname = value.trim();
-              return null;
-            }
-          },
-          decoration: InputDecoration(
-            label: ShowTitle(title: 'Surname :'),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-          ),
+          child: TextFormField(
+        validator: (value) {
+          if (value!.isEmpty) {
+            return 'Please Fill Surname in Blank';
+          } else {
+            surname = value.trim();
+            return null;
+          }
+        },
+        decoration: InputDecoration(
+          label: ShowTitle(title: 'Surname :'),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
         ),
-      );
+      ));
 
   Widget buildTitle(String title) => Padding(
         padding: const EdgeInsets.all(8.0),
         child: ShowTitle(
           title: title,
-          textStyle: MyConstant().h2Style(),
+          textStyle: MyConstant().h2BlueStyle(),
         ),
       );
 }
