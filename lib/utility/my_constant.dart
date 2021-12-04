@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MyConstant {
   // Genernal
   static String appName = 'Shopping Mall';
-  static String domain = 'https://ae78-182-232-158-69.ngrok.io';
+  static String domain = 'https://ca24-49-230-63-246.ngrok.io';
   static String urlPrompay = 'https://promptpay.io/0817004273.png';
   static String publicKey = 'pkey_test_5puysfksyvxsad9t7ys';
   static String secreKey = 'skey_test_5puysfkt8y97zj2qal6';
@@ -17,6 +17,7 @@ class MyConstant {
   static String routeEditProfileSaler = '/editProfileSaler';
   static String routeShowCart = '/showCart';
   static String routeAddWallet = '/addWallet';
+  static String routeConfirmAddWallet = '/confirmAddWallet';
 
   // Image
   static String image1 = 'images/image1.png';

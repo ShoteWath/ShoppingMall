@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
+import 'package:shoppingmall/widgets/nev_confirm_add_wallet.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
 
 class Bank extends StatefulWidget {
@@ -21,6 +22,7 @@ class _BankState extends State<Bank> {
           buildKbank(),
         ],
       ),
+      floatingActionButton: NavConfirmAddWallet(),
     );
   }
 

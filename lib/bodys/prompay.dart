@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
 import 'package:shoppingmall/utility/my_dialog.dart';
+import 'package:shoppingmall/widgets/nev_confirm_add_wallet.dart';
 import 'package:shoppingmall/widgets/show_progress.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
 
@@ -30,6 +31,7 @@ class _PrompayState extends State<Prompay> {
           ],
         ),
       ),
+      floatingActionButton: NavConfirmAddWallet(),
     );
   }
 
@@ -55,7 +57,7 @@ class _PrompayState extends State<Prompay> {
 
   Container buildQRcodePrompay() {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
+      margin: EdgeInsets.symmetric(vertical: 3),
       child: CachedNetworkImage(
         imageUrl: MyConstant.urlPrompay,
         placeholder: (context, url) => ShowProgress(),
