@@ -27,7 +27,7 @@ class _PrompayState extends State<Prompay> {
             buildTitle(),
             buildCopyPrompay(),
             buildQRcodePrompay(),
-            buildDownload()
+            buildDownload(),
           ],
         ),
       ),

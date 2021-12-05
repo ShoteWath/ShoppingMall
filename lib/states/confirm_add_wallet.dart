@@ -1,9 +1,12 @@
 import 'dart:io';
+import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
+import 'package:shoppingmall/utility/my_dialog.dart';
 import 'package:shoppingmall/widgets/show_image.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
 
@@ -15,7 +18,9 @@ class ConfirmAddWallet extends StatefulWidget {
 }
 
 class _ConfirmAddWalletState extends State<ConfirmAddWallet> {
-  late String dateTimeStr;
+  String? dateTimeStr;
+  File? file;
+  var formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -48,28 +53,110 @@ class _ConfirmAddWalletState extends State<ConfirmAddWallet> {
               : Icon(Icons.arrow_back),
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          newHeader(),
-          newDateTimePay(),
-          Spacer(),
-          newImage(),
-          Spacer(),
-          newButtonConfirm(),
-        ],
+      body: SingleChildScrollView(
+        //SingleChildScrollView สำหรับ android version 27
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+          behavior: HitTestBehavior.opaque,
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                newHeader(),
+                newDateTimePay(),
+                // Spacer()สำหรับ android 10 - 11,
+                newMoney(),
+                // Spacer()สำหรับ android 10 - 11,
+                newImage(),
+                // Spacer()สำหรับ android 10 - 11,
+                newButtonConfirm(),
+              ],
+            ),
+          ),
+        ),
       ),
+    );
+  }
+
+  Row newMoney() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 250,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 30, 0, 30),
+            child: TextFormField(
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please Fill Money ?';
+                } else {
+                  return null;
+                }
+              },
+              decoration: InputDecoration(
+                label: ShowTitle(title: 'Money'),
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
   Container newButtonConfirm() {
     return Container(
       width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {},
-        child: Text('Confirm Add Wallet'),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 30),
+        child: ElevatedButton(
+          onPressed: () {
+            if (formKey.currentState!.validate()) {
+              if (file == null) {
+                MyDialog().normalDialog(context, 'ยังไม่มีรูปภาพ',
+                    'กรุณาถ่ายภาพ หรือ ใช้ภาพจากคลังภาพ');
+              } else {
+                processUploadAndInsertData();
+              }
+            }
+          },
+          child: Text('Confirm Add Wallet'),
+        ),
       ),
     );
+  }
+
+  Future<void> processUploadAndInsertData() async {
+    String apiSaveSlip = '${MyConstant.domain}/shoppingmall/saveSlip.php';
+    String nameSlip = 'slip${Random().nextInt(1000000)}.jpg';
+    MyDialog().showProgressDialog(context);
+
+    try {
+      Map<String, dynamic> map = {};
+      map['file'] =
+          await MultipartFile.fromFile(file!.path, filename: nameSlip);
+      FormData data = FormData.fromMap(map);
+      await Dio()
+          .post(apiSaveSlip, data: data)
+          .then((value) => {print('value -->$value')});
+      Navigator.pop(context);
+    } catch (e) {}
+  }
+
+  Future<void> processTakePhoto(ImageSource source) async {
+    try {
+      var result = await ImagePicker().pickImage(
+        source: source,
+        maxWidth: 800,
+        maxHeight: 800,
+      );
+      setState(() {
+        file = File(result!.path);
+      });
+    } catch (e) {}
   }
 
   Row newImage() {
@@ -77,20 +164,26 @@ class _ConfirmAddWalletState extends State<ConfirmAddWallet> {
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.add_a_photo)),
+        IconButton(
+            onPressed: () => processTakePhoto(ImageSource.camera),
+            icon: Icon(Icons.add_a_photo)),
         Container(
           width: 200,
           height: 200,
-          child: ShowImage(path: 'images/bill.png'),
+          child: file == null
+              ? ShowImage(path: 'images/bill.png')
+              : Image.file(file!),
         ),
-        IconButton(onPressed: () {}, icon: Icon(Icons.add_photo_alternate)),
+        IconButton(
+            onPressed: () => processTakePhoto(ImageSource.gallery),
+            icon: Icon(Icons.add_photo_alternate)),
       ],
     );
   }
 
   ShowTitle newDateTimePay() {
     return ShowTitle(
-      title: dateTimeStr == null ? 'dd/MM/yy HH:mm' : dateTimeStr,
+      title: dateTimeStr == null ? 'dd/MM/yy HH:mm' : dateTimeStr!,
       textStyle: MyConstant().h2BlueStyle(),
     );
   }

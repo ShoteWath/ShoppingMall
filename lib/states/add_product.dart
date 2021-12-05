@@ -149,8 +149,7 @@ class _AddProductState extends State<AddProduct> {
 
   Future<Null> processImagePicker(ImageSource source, int index) async {
     try {
-      // ignore: deprecated_member_use
-      var result = await ImagePicker().getImage(
+      var result = await ImagePicker().pickImage(
         source: source,
         maxWidth: 800,
         maxHeight: 800,
