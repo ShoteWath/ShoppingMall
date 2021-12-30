@@ -32,7 +32,6 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     userModel = widget.userModel;
     readAPI();

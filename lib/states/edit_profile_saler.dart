@@ -203,8 +203,7 @@ class _EditProfileSalerState extends State<EditProfileSaler> {
 
   Future<Null> createAvatar({ImageSource? source}) async {
     try {
-      // ignore: deprecated_member_use
-      var result = await ImagePicker().getImage(
+      var result = await ImagePicker().pickImage(
         source: source!,
         maxWidth: 800,
         maxHeight: 800,

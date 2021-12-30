@@ -22,7 +22,6 @@ class _ShowAllShopBuyerState extends State<ShowAllShopBuyer> {
   List<UserModel> userModels = [];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     readApiAllShop();
   }

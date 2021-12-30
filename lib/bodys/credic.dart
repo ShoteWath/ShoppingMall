@@ -323,7 +323,7 @@ class _CredicState extends State<Credic> {
             return null;
           }
         },
-        decoration: InputDecoration(
+          decoration: InputDecoration(
           label: ShowTitle(title: 'Surname :'),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
         ),

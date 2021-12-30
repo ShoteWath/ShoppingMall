@@ -25,7 +25,6 @@ class _ShowCartState extends State<ShowCart> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     processReadSQLite();
   }

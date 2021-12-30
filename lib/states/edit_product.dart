@@ -116,8 +116,7 @@ class _EditProductState extends State<EditProduct> {
 
   Future<Null> chooseImage(int index, ImageSource source) async {
     try {
-      // ignore: deprecated_member_use
-      var result = await ImagePicker().getImage(
+      var result = await ImagePicker().pickImage(
         source: source,
         maxWidth: 800,
         maxHeight: 800,
