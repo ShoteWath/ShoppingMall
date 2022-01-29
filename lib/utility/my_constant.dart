@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MyConstant {
   // Genernal
   static String appName = 'Shopping Mall';
-  static String domain = 'https://5be5-49-230-83-65.ngrok.io';
+  static String domain = 'https://161c-182-232-140-243.ngrok.io';
   static String urlPrompay = 'https://promptpay.io/0817004273.png';
   static String publicKey = 'pkey_test_5puysfksyvxsad9t7ys';
   static String secreKey = 'skey_test_5puysfkt8y97zj2qal6';
@@ -65,6 +65,13 @@ class MyConstant {
         color: dark,
         fontWeight: FontWeight.bold,
       );
+
+  TextStyle h1WhiteStyle() => TextStyle(
+        fontSize: 20,
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      );
+
   TextStyle h1RedStyle() => TextStyle(
         fontSize: 20,
         color: Colors.red.shade900,

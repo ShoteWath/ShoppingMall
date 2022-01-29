@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shoppingmall/models/wallet_model.dart';
+import 'package:shoppingmall/utility/my_constant.dart';
+import 'package:shoppingmall/widgets/show_list_wallet.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
 
 class Approve extends StatefulWidget {
@@ -23,7 +25,15 @@ class _ApproveState extends State<Approve> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ShowTitle(title: 'This is Approve'),
+      body: approveWalletModels?.isEmpty ?? true
+          ? Center(
+              child: ShowTitle(
+              title: 'No Money Approve',
+              textStyle: MyConstant().h1Style(),
+            ))
+          : ShowListWallet(
+              walletModels: approveWalletModels,
+            ),
     );
   }
 }
