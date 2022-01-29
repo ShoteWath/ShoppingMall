@@ -15,7 +15,6 @@ class _ApproveState extends State<Approve> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     approveWalletModels = widget.walletModels;
     print('approve list ==>>${approveWalletModels!.length}');

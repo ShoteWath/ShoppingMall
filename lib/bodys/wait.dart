@@ -14,7 +14,6 @@ class _WaitState extends State<Wait> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     waitWalletModels = widget.walletModels;
     print('waitlist ==>${waitWalletModels!.length}');
